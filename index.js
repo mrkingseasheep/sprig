@@ -2,180 +2,183 @@
 First time? Check out the tutorial game:
 https://sprig.hackclub.com/gallery/getting_started
 
-@title: cow-thief
-@author: Xinyang Wang
+@title: once,twice,trice
+@author: 
 @tags: []
-@addedOn: 2024-08-10
+@addedOn: 2024-00-00
 */
 
 const player = "p"
-const ground = "g"
-const doggo = "d"
-const cow = "c"
-const goal = "w"
+const player2 = "q"
+const wall = "w"
+const box = "b"
+const end = "e"
 
 setLegend(
-  [player, bitmap`
-................
-................
-................
-................
-................
-.......77.......
-......7777......
-.....777777.....
-....77777777....
-....77777777....
-....1L1LL1L1....
-.1LLLLLLLLLLLL1.
-L66LL66LL66LL66L
-L66LL66LL66LL66L
-.1LLLLLLLLLLLL1.
-....11111111....`],
-  [ground, bitmap`
-DDDDDDDDDD4DDDD4
-D4D44DDDD4DDD4DD
-44DDDD4DDDDD4DD4
-DDDDD4DDDD4DDDCD
-44CCD44DC444CCDD
-4CDC4DCCDDDCCD4D
-CDCCD4CCCDDCCC4D
-CDCCCDCCCDCCCC4D
-CCCCCDCCCCCCCCCC
-CCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCC`],
-  [doggo, bitmap`
-................
-................
-......LL....LL..
-........LLLLL...
-........L515L...
-........L1111L..
-........L0101L..
-...LLLLL3101LL..
-..LL1111331LL...
-LLL11111133L....
-..L11111166.....
-..LL111111L.....
-.LLLL11111L.....
-.L.L.LLLLLL.....
-.L.LL..L..L.....
-.L..L..LL.LL....`],
-  [cow, bitmap`
-0.00...0........
-.002000.........
-0322230.........
-0222220.........
-02LLL20000000...
-00222000000220..
-.0000222002220..
-...002222222220.
-...0220022222000
-...02000200000.0
-...02222200000.0
-...0000000000...
-...0..0..0..0...
-...0..0..0..0...
-..0...00..0.000.
-.00...00.00..00.`],
-  [goal, bitmap`
-................
-.....111........
-....11211.......
-....12221.......
-...112221.......
-.1122221........
-.12222211.......
-.122222211......
-..111222211.....
-.....122221.....
-.....112221111..
-......11222221..
-.......1122221..
-........122111..
-........1111....
-................`],
+  [ player, bitmap`
+0000000000000000
+0099999999999900
+0609933333399060
+0663333333333660
+0663333333333660
+0633333333333360
+0633333333333360
+0633333333333360
+0633333333333360
+0633333333333360
+0633333333333360
+0663333333333660
+0663333333333660
+0609933333399060
+0099999999999900
+0000000000000000` ],
+  [ player2, bitmap`
+0000000000000000
+00HHHHHHHHHHHH00
+080HH555555HH080
+0885555555555880
+0885555555555880
+0855555555555580
+0855555555555580
+0855555555555580
+0855555555555580
+0855555555555580
+0855555555555580
+0885555555555880
+0885555555555880
+080HH555555HH080
+00HHHHHHHHHHHH00
+0000000000000000` ],
+  [ wall, bitmap`
+0000000000000000
+00L0L0L0L0L0L000
+0L0LLLLLLLLLL010
+0LL0L0L0L0L00220
+0LLL0LLLLLL01210
+0LLLL0L0L0022220
+0LLLLL0LL0121210
+0LLLLLL002222220
+0LLLLLL002121210
+0LLLLL0110222220
+0LLLL01111021210
+0LLL011111102220
+0LL0111111110210
+0L01111111111020
+0011111111111100
+0000000000000000` ],
+  [ end, bitmap`
+2200220022002200
+2200220022002200
+0022002200220022
+0022002200220022
+2200220022002200
+2200220022002200
+0022002200220022
+0022002200220022
+2200220022002200
+2200220022002200
+0022002200220022
+0022002200220022
+2200220022002200
+2200220022002200
+0022002200220022
+0022002200220022` ],
+  [ box, bitmap`
+0000000000000000
+00FFFFFFFFFFFF00
+0FFFFFFFFFFFFFF0
+0000000000000000
+0FF0600FF0060FF0
+0FF0060FF0600FF0
+0FF0600FF0060FF0
+0FF0060FF0600FF0
+0FF0600FF0060FF0
+0FF0060FF0600FF0
+0FF0600FF0060FF0
+0FF0060FF0600FF0
+0000000000000000
+0FFFFFFFFFFFFFF0
+00FFFFFFFFFFFF00
+0000000000000000`],
 )
 
-const solids = [
-  doggo,
-  ground,
-  player,
-  cow,
-];
-
-setSolids(solids);
+setSolids([player, player2, wall, box])
 
 let level = 0
 const levels = [
   map`
-..p..
-.....
-d...w
-ggggg`,
-  map`
-..p..
+pw.ww
 ....w
-dgggg
-ggggg`,
+w.w..
+..wwe`,
+  map`
+pw...
+.w.we
+.w.ww
+.b..w`,
+  map`
+pwwwe
+.b...
+w.wb.
+b...w`,
+  map`
+p.q..
+ww.w.
+ww.w.
+e....`,
 ]
 
 setMap(levels[level])
 
 setPushables({
-  [player]: []
+  [ player ]: [box]
 })
 
-onInput("s", () => {
-  getFirst(player).y += 1
-})
-onInput("w", () => {
-  getFirst(player).y -= 1
-})
-onInput("d", () => {
-  getFirst(player).x += 1
-})
-onInput("a", () => {
-  getFirst(player).x -= 1
-})
-
-function isSolid(x, y) {
-  let tile = getTile(x, y);
-  for (let i = 0; i < solids.length; ++i) {
-    if (tile == solids[i]) {
-      return true;
-    }
+function moveAllX(dist) {
+  getFirst(player).x += dist;
+  if (getFirst(player2) !== undefined) {  
+    getFirst(player2).x += dist;
   }
-  return false;
 }
 
-afterInput(() => {
-  let dog = getFirst(doggo);
-
-  if (!isSolid(getTile(dog.x, dog.y + 1))) {
-    dog.y += 1;
+function moveAllY(dist) {
+  getFirst(player).y += dist;
+  if (getFirst(player2) !== undefined) {  
+    getFirst(player2).y += dist;
   }
+}
 
-  if (!isSolid(getTile(dog.x + 1, dog.y))) {
-    dog.x += 1;
-  }
-
-  if (getTile(dog.x, dog.y) == "w") {
-    ++level;
-  }
+onInput("s", () => {
+  moveAllY(1);
+})
+onInput("w", () => {
+  moveAllY(-1);
+})
+onInput("a", () => {
+  moveAllX(-1);
+})
+onInput("d", () => {
+  moveAllX(1);
 })
 
+afterInput(() => {
+  let p1 = getFirst(player);
+  let p2 = getFirst(player2);
+  let finish = getFirst(end);
 
-
-
-
-
-
+  if (p2 !== undefined && p1.x == p2.x && p1.y == p2.y) {
+    setMap(levels[level]);
+  }
+  
+  if (p1.x == finish.x && p1.y == finish.y) {
+    let nxtLvl = level + 1;
+    if (nxtLvl < levels.length) {
+      setMap(levels[nxtLvl]);
+    } else {
+      addText("you win!", { y: 4, color: color`3` });
+    }
+  }
+})
 
 
 
